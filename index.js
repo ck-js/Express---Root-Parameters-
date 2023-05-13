@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const morgan = require('morgan');
+const usersRouter = require('./users.js');
+const postsRouter = require('./posts.js');
+
 const port = 3000;
 
 // root parameters 
@@ -99,6 +102,27 @@ app.use((req,res,next) => {
 app.get('/users/:id', function(req,res,next) {
     console.log('User Sent Success')
 })
+
+app.use(express.json());
+app.get('/', (req, res) =>{
+    console.log('Request body username',
+    req.body.username)
+})
+
+function checkReqBody(req, res) {
+    if (req.body !== undefined) {
+        console.log('Valid Request Body')
+    } else {
+        console.log('Invalid request body')
+    }
+}
+app.use(checkReqBody)
+
+// Express Router 
+app.use('/users', usersRouter);
+app.use('/posts', postsRouter)
+
+
 
 
 app.listen(port, () => {
