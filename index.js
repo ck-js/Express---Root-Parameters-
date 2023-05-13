@@ -58,7 +58,7 @@ function authenticate(req, res) {
     if (req.body.role === 'Admin') {
         console.log('Authenticated');
     } else {
-        console.log('Unauthorized');
+        console.log('Unauthorized User');
     }
 }
 app.use(authenticate);
@@ -122,6 +122,24 @@ app.use(checkReqBody)
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter)
 
+usersRouter.use('/:usersId/', (req, res, next) => {
+    console.log(
+        `Router use for /user with method${req.method} and path ${req.path}`
+    );
+    next();
+});
+
+app.use('/', router);
+router.param('User ID', (req,res,next,userId) => {
+    if (userId === '1') {
+        console.log(
+            `This is an alert for ${userId}`)
+    }
+    next();
+});
+router.get('/user/:userId', (req,res) => {
+    res.send('Router get')
+})
 
 
 
