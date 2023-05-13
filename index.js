@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const router = express.Router();
 const morgan = require('morgan');
 const port = 3000;
 
@@ -71,6 +72,33 @@ app.use((req,res) => {
     console.log('Request hostname: ', req.hostname);
     console.log('Request path: ', req.path)
 });
+
+// middleware router
+router.use((req, res, next) => {
+    console.log('Request to this router received');
+})
+
+app.use((req, res) => {
+    console.log('Incoming Request...');
+    console.log('Request type' + req.method);
+    console.log('The flow stops here...');
+})
+// below function won't run because we already use 'use'
+app.get((req,res) => {
+    console.log('We did not make it to the middleware')
+})
+
+// use next to move onto next middleware
+app.use((req,res,next) => {
+    console.log('Incoming request...');
+    console.log('Request host', req.hostname);
+    console.log('Request path', req.path);
+    next();
+})
+// below will run because we use next function above
+app.get('/users/:id', function(req,res,next) {
+    console.log('User Sent Success')
+})
 
 
 app.listen(port, () => {
